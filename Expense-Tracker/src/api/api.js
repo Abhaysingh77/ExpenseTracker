@@ -1,5 +1,5 @@
 import axios from "axios";
-const CONFIG = "http://localhost:8080";
+const CONFIG = "https://expensetracker-bdsd.onrender.com";
 export const getExpensesData = async () => {
   try {
     const res = await axios.get(`${CONFIG}/expenses`);

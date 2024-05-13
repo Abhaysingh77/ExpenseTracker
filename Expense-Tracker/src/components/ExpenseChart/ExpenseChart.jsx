@@ -5,12 +5,18 @@ export default function ExpenseChart({data}) {
   return (
     <BarChart
     className="ExpChart"
-      width={0}
+      width={300}
       height={300}
       data={data}
+      margin={{
+        top: 5,
+        right: 50,
+        left: 0,
+        bottom: 5,
+      }}
     >
       <XAxis dataKey='name' tickLine={false} axisLine={false} />
-      <Bar className="bars" dataKey='value' fill="#8884d8" text="name" barSize={30}/>
+      <Bar dataKey='value' fill="#8884d8" text="name" maxBarSize={50}/>
     </BarChart>
   );
 }

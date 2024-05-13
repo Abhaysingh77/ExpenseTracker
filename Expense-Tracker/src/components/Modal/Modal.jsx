@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { postExpenseData, updateExpenseData } from "../../api/api";
 export default function ModalBox({ isOpen, setIsOpen, btnText, body, _id  }) {
   const handleIncome = (e) => {
-    e.preventDefault();
     localStorage.setItem(
       "income",
       Number(e.target[0].value) + Number(localStorage.getItem("income"))
@@ -13,7 +12,6 @@ export default function ModalBox({ isOpen, setIsOpen, btnText, body, _id  }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     let obj = {};
     for (let i = 0; i < 4; i++) {
       if (e.target[i].name === "date") {
@@ -28,22 +26,16 @@ export default function ModalBox({ isOpen, setIsOpen, btnText, body, _id  }) {
         obj[e.target[i].name] = e.target[i].value;
       }
     }
-    if (btnText === "Income") {
-      // Add balance logic here...
-    } else {
-      postExpenseData(obj);
-    }
+    postExpenseData(obj);
     closeModal();
   };
 
   const handleCancel = () => {
     closeModal();
   };
-  
   const closeModal = () => {
     setIsOpen(false);
   };
-
   return (
     <ReactModal
       ariaHideApp={false}
