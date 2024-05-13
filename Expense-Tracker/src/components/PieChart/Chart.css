@@ -1,0 +1,10 @@
+.bar{
+    height: 2px;
+    width: 5px;
+}
+.container{
+    display: flex;
+}
+.legend {
+    margin-top: 0px;
+}

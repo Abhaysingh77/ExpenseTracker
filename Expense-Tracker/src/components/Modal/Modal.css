@@ -1,0 +1,35 @@
+.h2{
+    color: black;
+    margin-left: 2%;
+}
+.input{
+    width: 10rem;
+    height: 2rem;
+    color: rgba(0, 0, 0, 0.374);
+    border-radius: 10px;
+    border: none;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 4px 0px #00000040;
+    margin: 1.5%;
+    padding: 1%;
+}
+
+#cat{
+    height: 2.3rem;
+    width: 10.5rem;
+}
+
+#cat option{
+    color: #010101;
+}
+#addBtn {
+    height: 2.3rem;
+    background-color: #F4BB4A;
+    color: #FFFFFF;
+}
+#cancelBtn {
+    width: 6rem;
+    height: 2.3rem;
+    margin-left: 3.5%;
+    background-color: #D9D9D9;
+}

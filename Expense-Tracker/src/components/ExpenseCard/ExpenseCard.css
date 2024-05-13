@@ -1,0 +1,68 @@
+small, p, span {
+    color: #010101;
+}
+.logo{
+    height: 38px;
+    width: 38px;
+    background-color: #D9D9D9;
+    border-radius: 38px;
+    text-align: center;
+}
+.edit{
+    height: 38px;
+    width: 38px;
+    background-color: #F4BB4A;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 4px 0px #00000040;
+
+}
+.delete{
+    height: 38px;
+    width: 38px;
+    background-color: #FF3E3E;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 4px 0px #00000040;
+
+}
+.TransCard {
+    width: 95%;
+    height: 15vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+    margin: auto;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+}
+.text {
+    text-align: start;
+    margin-left: 1rem;
+}
+.text p:first-child {
+    font-size: larger;
+}
+.sml {
+    margin-top: -1rem;
+    font-size: medium;
+    color: #d9b4b4;
+}
+
+.right {
+    width: 25%;
+    display: flex;
+    justify-content: space-between;
+}
+.right div:first-child{
+    margin: auto;
+}
+
+.right div:last-child {
+    display: flex;
+    gap: 5px;
+}

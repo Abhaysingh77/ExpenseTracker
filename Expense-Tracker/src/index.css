@@ -1,0 +1,8 @@
+:root {
+  --primary-font : 'ubuntu', sans-serif;
+  --card-color: #9B9B9B;
+}
+
+body {
+  background-color: #3B3B3B;
+}
