@@ -1,4 +1,3 @@
-.ExpChart {
-   margin: auto;
-   padding: 1rem;
+.chart-container {
+  transform: rotate(90deg);
 }

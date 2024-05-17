@@ -5,8 +5,18 @@ import ExpenseCard from "../ExpenseCard/ExpenseCard";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { useState } from "react";
 
-export default function TopExpense({ data, chartData }) {
+export default function TopExpense({
+  data = [],
+  cData = [],
+  deleteTransaction,
+  openEditModal,
+  isModalOpen,
+  setIsModalOpen,
+  editExpense,
+  updateTransaction,
+}) {
   const [index, setIndex] = useState(0);
+  const [pageNo, setPageNo] = useState(0);
   return (
     <>
       <div className="headings">
@@ -20,43 +30,47 @@ export default function TopExpense({ data, chartData }) {
       <div className="container">
         <div className="transaction">
           <div className="transCards">
-            {data.slice(index,index+3).map((item) => {
-              return <ExpenseCard
-                category={item.category}
-                title={item.title}
-                date={item.date}
-                price={item.price}
-                key={item._id}
-                _id={item._id}
-              />;
+            {data.slice(index, index + 3).map((item) => {
+              return (
+                <ExpenseCard
+                  category={item.category}
+                  price={item.price}
+                  date={item.date}
+                  title={item.title}
+                  _id={item._id}
+                  key={item._id}
+                  deleteTransaction={deleteTransaction}
+                  openEditModal={openEditModal}
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                  editExpense={editExpense}
+                  updateTransaction={updateTransaction}
+                />
+              );
             })}
           </div>
           <div className="navigationKeys">
             <span className="leftArr">
               <IoIosArrowRoundBack
                 fill="black"
-                style={{
-                  height: "40px",
-                  width: "36px",
-                }}
-                onClick={()=>{
-                  if(index>0){
-                    setIndex(prev=>prev-1);
+                style={{ height: "40px", width: "36px" }}
+                onClick={() => {
+                  if (index > 2) {
+                    setPageNo((prev) => prev - 1);
+                    setIndex((prev) => prev - 3);
                   }
                 }}
               />
             </span>
-            <span className="pageNo">{index+1}</span>
+            <span className="pageNo">{pageNo + 1}</span>
             <span className="rightArr">
               <IoIosArrowRoundForward
                 fill="black"
-                style={{
-                  height: "40px",
-                  width: "36px",
-                }}
-                onClick={()=>{
-                  if(index<data.length){
-                    setIndex(prev=>prev+1);
+                style={{ height: "40px", width: "36px" }}
+                onClick={() => {
+                  if (index + 3 < data.length) {
+                    setPageNo((prev) => prev + 1);
+                    setIndex((prev) => prev + 3);
                   }
                 }}
               />
@@ -64,7 +78,7 @@ export default function TopExpense({ data, chartData }) {
           </div>
         </div>
         <div className="graph">
-          <ExpenseChart data={chartData} />
+          <ExpenseChart chartData={cData} />
         </div>
       </div>
     </>
@@ -73,5 +87,12 @@ export default function TopExpense({ data, chartData }) {
 
 TopExpense.propTypes = {
   data: PropTypes.array.isRequired,
-  chartData: PropTypes.array.isRequired,
+  cData: PropTypes.array.isRequired,
+  deleteTransaction: PropTypes.func.isRequired,
+  setEditExpense: PropTypes.func.isRequired,
+  openEditModal: PropTypes.func.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
+  isModalOpen:PropTypes.bool.isRequired,
+  editExpense:PropTypes.object.isRequired,
+  updateTransaction:PropTypes.func.isRequired,
 };

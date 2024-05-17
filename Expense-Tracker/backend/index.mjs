@@ -57,6 +57,6 @@ app.delete('/expenses/:id', (req, res) => {
       if (numRemoved === 0) {
           return res.status(404).json({ error: 'Expense not found' });
       }
-      return res.status(204).send(); // No content to send
+      return res.status(204).json({success:"Deleted successfully"}); // No content to send
   });
 });

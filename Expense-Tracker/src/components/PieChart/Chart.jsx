@@ -1,5 +1,5 @@
 import "./Chart.css";
-import { PieChart, Pie, Cell, Legend } from "recharts";
+import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts";
 import PropTypes from "prop-types";
 
 const COLORS = ["#0088FE", "#FF8042", "#FFBB28"];
@@ -13,7 +13,7 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
 }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -29,28 +29,31 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
-export default function Chart({ data }) {
+
+export default function Chart({ pieChartData = [] }) {
   return (
-    <PieChart width={400} height={400}>
-      <Pie
-        data={data}
-        cx={200}
-        cy={190}
-        labelLine={false}
-        label={renderCustomizedLabel}
-        outerRadius={95}
-        fill="#8884d8"
-        dataKey="value"
-      >
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-      </Pie>
-      <Legend wrapperStyle={{ bottom: "95px" }} />
-    </PieChart>
+    <ResponsiveContainer width="50%" height="100%">
+      <PieChart>
+        <Pie
+          data={pieChartData}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          label={renderCustomizedLabel}
+          outerRadius="90%"
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {pieChartData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Legend wrapperStyle={{ bottom: "5%", left: "50%", transform: "translateX(-50%)" }} />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }
 
 Chart.propTypes = {
-  data: PropTypes.array.isRequired,
+  pieChartData: PropTypes.array.isRequired,
 };

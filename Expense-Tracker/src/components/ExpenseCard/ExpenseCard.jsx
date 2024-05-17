@@ -6,31 +6,33 @@ import {
   MdOutlineMovieFilter,
 } from "react-icons/md";
 import { TiDeleteOutline } from "react-icons/ti";
-import { deleteExpenseData } from "../../api/api";
-import ModalBox from "../Modal/Modal";
-import { useState } from "react";
 import PropTypes from "prop-types";
-export default function ExpenseCard({ category, title, date, price, _id }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const handleClick = () => {
-    setIsOpen(true);
-  };
-  const body = {
-    _id: _id,
-    category: category,
-    title: title,
-    date: date,
-    price: price,
+import ModalBox from "../Modal/Modal";
+
+export default function ExpenseCard({
+  category,
+  price,
+  date,
+  title,
+  _id,
+  deleteTransaction,
+  openEditModal,
+  isModalOpen,
+  setIsModalOpen,
+  editExpense,
+  updateTransaction,
+}) {
+  const handleEdit = () => {
+    openEditModal({
+      category,
+      price,
+      date,
+      title,
+      _id,
+    });
   };
   return (
-    <div className="TransCard">
-      <ModalBox
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        btnText="Edit Expenses"
-        body={body}
-        _id={_id}
-      />
+    <div className="TransCard" key={_id}>
       <div className="left">
         <div className="logo">
           {category === "Food" && (
@@ -46,19 +48,13 @@ export default function ExpenseCard({ category, title, date, price, _id }) {
           {category === "Travel" && (
             <MdCardTravel
               fill="black"
-              style={{
-                height: "30px",
-                width: "30px",
-              }}
+              style={{ height: "30px", width: "30px" }}
             />
           )}
           {category === "Entertainment" && (
             <MdOutlineMovieFilter
               fill="black"
-              style={{
-                height: "30px",
-                width: "30px",
-              }}
+              style={{ height: "30px", width: "30px" }}
             />
           )}
         </div>
@@ -68,9 +64,9 @@ export default function ExpenseCard({ category, title, date, price, _id }) {
         </div>
       </div>
       <div className="right">
-        <div>
+        <div className="price">
           <span
-            className="price"
+            
             style={{ color: "#F4BB4A", fontWeight: "bold", fontSize: "larger" }}
           >
             &#8377;{price}
@@ -81,20 +77,25 @@ export default function ExpenseCard({ category, title, date, price, _id }) {
             <TiDeleteOutline
               fill="white"
               style={{ height: "37px", width: "36px" }}
-              onClick={() => {
-                deleteExpenseData(_id);
-              }}
+              onClick={() => deleteTransaction(_id)}
             />
           </span>
           <span className="edit">
             <MdOutlineEdit
               fill="white"
               style={{ height: "35px", width: "30px", margin: "auto" }}
-              onClick={handleClick}
+              onClick={handleEdit}
             />
           </span>
         </div>
       </div>
+      <ModalBox
+        btnText="Edit expense"
+        isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
+        editExpense={editExpense}
+        updateTransaction={updateTransaction}
+      />
     </div>
   );
 }
@@ -105,4 +106,10 @@ ExpenseCard.propTypes = {
   price: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   _id: PropTypes.string.isRequired,
+  deleteTransaction: PropTypes.func.isRequired,
+  openEditModal: PropTypes.func.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
+  updateTransaction: PropTypes.func.isRequired,
+  isModalOpen: PropTypes.bool.isRequired,
+  editExpense: PropTypes.object.isRequired,
 };

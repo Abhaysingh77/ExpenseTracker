@@ -2,31 +2,37 @@ import ReactModal from "react-modal";
 import "./Modal.css";
 import PropTypes from "prop-types";
 import { postExpenseData, updateExpenseData } from "../../api/api";
-export default function ModalBox({ isOpen, setIsOpen, btnText, body, _id  }) {
-  const handleIncome = (e) => {
-    localStorage.setItem(
-      "income",
-      Number(e.target[0].value) + Number(localStorage.getItem("income"))
-    );
-    closeModal();
-  };
-
+export default function ModalBox({
+  btnText,
+  isOpen,
+  setIsOpen,
+  updateTotalBalance,
+  updateTransaction,
+  editExpense
+}) {
   const handleSubmit = async (e) => {
-    let obj = {};
-    for (let i = 0; i < 4; i++) {
-      if (e.target[i].name === "date") {
-        let date = new Date(e.target[i].value);
-        let formattedDate = date.toLocaleDateString("en-US", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        });
-        obj[e.target[i].name] = formattedDate;
-      } else {
-        obj[e.target[i].name] = e.target[i].value;
-      }
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const obj = Object.fromEntries(formData.entries());
+    if (obj.date) {
+      const date = new Date(obj.date);
+      obj.date = date.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
     }
-    postExpenseData(obj);
+    try {
+      if (editExpense && btnText==="Edit expenses") {
+        const updatedData = await updateExpenseData(obj,editExpense._id);
+        updateTransaction(updatedData);
+      } else {
+        const data = await postExpenseData(obj);
+        updateTransaction(data);
+      }
+    } catch (error) {
+      console.error("Failed to add expense", error);
+    }
     closeModal();
   };
 
@@ -35,6 +41,12 @@ export default function ModalBox({ isOpen, setIsOpen, btnText, body, _id  }) {
   };
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  const handleIncome = (e) => {
+    localStorage.setItem("income", parseInt(e.target[0].value));
+    updateTotalBalance(parseInt(e.target[0].value));
+    closeModal();
   };
   return (
     <ReactModal
@@ -130,20 +142,21 @@ export default function ModalBox({ isOpen, setIsOpen, btnText, body, _id  }) {
             />
           </div>
           <div>
-           {btnText==="Expenses" ? ( <input
-              type="submit"
-              value="Add Expenses"
-              className="input"
-              id="addBtn"
-            />):( <input
-              type="button"
-              value="Edit Expenses"
-              className="input"
-              id="addBtn"
-              onClick={async()=>{
-                updateExpenseData(body,_id);
-              }}
-            />)}
+            {btnText === "Expenses" ? (
+              <input
+                type="submit"
+                value="Add Expenses"
+                className="input"
+                id="addBtn"
+              />
+            ) : (
+              <input
+                type="submit"
+                value="Edit Expenses"
+                className="input"
+                id="addBtn"
+              />
+            )}
             <input
               type="button"
               value="Cancel"
@@ -162,6 +175,7 @@ ModalBox.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
   btnText: PropTypes.string.isRequired,
-  body: PropTypes.object.isRequired,
-  _id: PropTypes.string.isRequired,
+  updateTotalBalance: PropTypes.func.isRequired,
+  updateTransaction: PropTypes.func.isRequired,
+  editExpense:PropTypes.object.isRequired,
 };
