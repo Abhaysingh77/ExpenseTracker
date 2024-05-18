@@ -2,13 +2,14 @@ import ReactModal from "react-modal";
 import "./Modal.css";
 import PropTypes from "prop-types";
 import { postExpenseData, updateExpenseData } from "../../api/api";
+import { enqueueSnackbar } from "notistack";
 export default function ModalBox({
   btnText,
   isOpen,
   setIsOpen,
   updateTotalBalance,
   updateTransaction,
-  editExpense
+  editExpense,
 }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,15 +24,27 @@ export default function ModalBox({
       });
     }
     try {
-      if (editExpense && btnText==="Edit expenses") {
-        const updatedData = await updateExpenseData(obj,editExpense._id);
+      if (editExpense && btnText === "Edit expenses") {
+        console.log("updating");
+        const updatedData = await updateExpenseData(obj, editExpense._id);
         updateTransaction(updatedData);
       } else {
-        const data = await postExpenseData(obj);
-        updateTransaction(data);
+        let totalBalance = localStorage.getItem("income");
+        console.log(obj.price);
+        if (totalBalance - obj.price<0) {
+          enqueueSnackbar(
+            "Wallet balance is low! Add wallet balance to keep updating",
+            { variant: "warning" }
+          );
+        } else {
+          console.log("posting");
+          const data = await postExpenseData(obj);
+          updateTransaction(data);
+          updateTotalBalance(parseInt(totalBalance)-obj.price);
+        }
       }
     } catch (error) {
-      console.error("Failed to add expense", error);
+      enqueueSnackbar("Failed to add expense", { variant: "error" });
     }
     closeModal();
   };
@@ -44,8 +57,9 @@ export default function ModalBox({
   };
 
   const handleIncome = (e) => {
-    localStorage.setItem("income", parseInt(e.target[0].value));
-    updateTotalBalance(parseInt(e.target[0].value));
+    let income = localStorage.getItem("income");
+    localStorage.setItem("income", parseInt(e.target[0].value)+parseInt(income));
+    updateTotalBalance(parseInt(e.target[0].value)+parseInt(income));
     closeModal();
   };
   return (
@@ -63,8 +77,8 @@ export default function ModalBox({
           backgroundColor: "rgba(255, 255, 255, 0.75)",
         },
         content: {
-          width: "30vw",
-          height: "max-content",
+          width: "50vw",
+          height: "40vh",
           margin: "auto",
           border: "1px solid #ccc",
           background: "#EFEFEFD9",
@@ -79,7 +93,7 @@ export default function ModalBox({
       {btnText === "Income" ? (
         <form onSubmit={handleIncome}>
           <h2 className="h2">Add Balance</h2>
-          <div style={{ display: "flex" }}>
+          <div>
             <input
               type="number"
               name="income"
@@ -177,5 +191,5 @@ ModalBox.propTypes = {
   btnText: PropTypes.string.isRequired,
   updateTotalBalance: PropTypes.func.isRequired,
   updateTransaction: PropTypes.func.isRequired,
-  editExpense:PropTypes.object.isRequired,
+  editExpense: PropTypes.object.isRequired,
 };

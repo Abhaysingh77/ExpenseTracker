@@ -12,10 +12,12 @@ export default function Transaction({ data=[], updateTransaction }) {
   const getTotalExpense = () =>{
     let total_expense = 0;
     data.forEach(item=>total_expense+=item.value);
+    localStorage.setItem('expenses',total_expense);
     setTotalExpense(total_expense);
   }
 
   const updateTotalBalance = (balance) =>{
+    localStorage.setItem('income',balance);
     setTotalBalance(balance);
   }
   useEffect(()=>{
